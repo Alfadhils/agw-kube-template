@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-service
+  name: user-service-agw
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: user-service
+      app: user-service-agw
   template:
     metadata:
       labels:
-        app: user-service
+        app: user-service-agw
     spec:
       imagePullSecrets:
       - name: ghcr-secret
