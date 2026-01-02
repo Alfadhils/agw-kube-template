@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      imagePullSecrets:
+      - name: ghcr-secret
+      containers:
+      - name: user-service
+        image: ghcr.io/alfadhils/user-service:latest
+        ports:
+        - containerPort: 5000
+        env:
+        # --- Database ---
+        - name: PG_HOST
+          value: "172.18.68.13"
+        - name: PG_PORT
+          value: "5432"
+        - name: PG_USER
+          value: "agw_user"
+        - name: PG_PASSWORD
+          value: "STRONG_PASSWORD"
+        - name: PG_DB
+          value: "agw_db"
+        - name: DATABASE_URL
+          value: "postgres://agw_user:STRONG_PASSWORD@172.18.68.13:5432/agw_db"
+
+        # --- App ---
+        - name: APP_SECRET_KEY
+          value: "your_secret_key_here"
+        - name: BACKEND_PORT
+          value: "5000"
+        - name: NODE_ENV
+          value: "development"
+
+        # --- Instance IPs (HARDCODED) ---
+        - name: INSTANCE_PRIVATE_IP
+          value: "172.18.68.11"
+        - name: INSTANCE_PUBLIC_IP
+          value: "0.0.0.0"
+
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
